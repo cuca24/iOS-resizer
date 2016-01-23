@@ -1,0 +1,432 @@
+#!/bin/bash
+
+CUR_DIR="$PWD"
+IFS=$'\n';
+
+
+function to2x(){
+    
+    for f in $( find $CUR_DIR -iname "*.png" -or -iname "*.jpg" ); do
+     
+        if [[ $f == *"@3x"* ]]
+        then
+            image_dir=$(dirname $f)
+            image_name=$(basename $f)
+            extension="${image_name##*.}"
+            filename="${image_name%.*}"
+            
+            newnamex2=${filename/@3x/@2x}
+            newnamex1=${filename/@3x/""}
+            newfilex2="$image_dir/$newnamex2.$extension"
+            newfilex1="$image_dir/$newnamex1.$extension"
+            
+            echo "Procesing: $f > $newfilex1 ";
+            $(convert $f -resize 66.6% $newfilex2)
+            $(convert $f -resize 33.3% $newfilex1)
+        fi
+    done
+}
+
+function to1x(){
+    
+    for f in $( find $CUR_DIR -iname "*.png" -or -iname "*.jpg" ); do
+     
+        if [[ $f == *"@2x"* ]]
+        then
+            image_dir=$(dirname $f)
+            image_name=$(basename $f)
+            extension="${image_name##*.}"
+            filename="${image_name%.*}"
+            
+            newnamex1=${filename/@2x/""}
+            newfilex1="$image_dir/$newnamex1.$extension"
+            
+            echo "Procesing: $f > $newfilex1 ";
+            $(convert $f -resize 50% $newfilex1)
+        fi
+    done
+}
+
+function createAppIcon(){
+    image=$1;
+    xcassets="$CUR_DIR/Assets.xcassets/AppIcon.appiconset/Contents.json"
+    
+    if [ -f $image ]; then
+        echo "Resizing app icon"
+        
+        if [ -f $xcassets ]; then
+            echo "Found Assets.xcassets/AppIcon.appiconset/Contents.json"
+            
+            icon29="icon-29.png"
+            icon58="icon-58.png"
+            icon80="icon-80.png"
+            icon120="icon-120.png"
+            icon180="icon-180.png"
+            icon40="icon-40.png"
+            icon80="icon-80.png"
+            icon76="icon-76.png"
+            icon152="icon-152.png"
+            icon87="icon-87.png"
+            
+            $(convert $image -resize 29x29 Assets.xcassets/AppIcon.appiconset/$icon29)
+            $(convert $image -resize 58x58 Assets.xcassets/AppIcon.appiconset/$icon58)
+            $(convert $image -resize 80x80 Assets.xcassets/AppIcon.appiconset/$icon80)
+            $(convert $image -resize 120x120 Assets.xcassets/AppIcon.appiconset/$icon120)
+            $(convert $image -resize 180x180 Assets.xcassets/AppIcon.appiconset/$icon180)
+            $(convert $image -resize 40x40 Assets.xcassets/AppIcon.appiconset/$icon40)
+            $(convert $image -resize 80x80 Assets.xcassets/AppIcon.appiconset/$icon80)
+            $(convert $image -resize 76x76 Assets.xcassets/AppIcon.appiconset/$icon76)
+            $(convert $image -resize 152x152 Assets.xcassets/AppIcon.appiconset/$icon152)
+            $(convert $image -resize 87x87 Assets.xcassets/AppIcon.appiconset/$icon87)
+            
+            appIconJson="{
+                          \"images\" : [
+                            {
+                              \"size\" : \"29x29\",
+                              \"idiom\" : \"iphone\",
+                              \"filename\" : \"$icon58\",
+                              \"scale\" : \"2x\"
+                            },
+                            {
+                              \"size\" : \"29x29\",
+                              \"idiom\" : \"iphone\",
+                              \"filename\" : \"$icon87\",
+                              \"scale\" : \"3x\"
+                            },
+                            {
+                              \"size\" : \"40x40\",
+                              \"idiom\" : \"iphone\",
+                              \"filename\" : \"$icon80\",
+                              \"scale\" : \"2x\"
+                            },
+                            {
+                              \"size\" : \"40x40\",
+                              \"idiom\" : \"iphone\",
+                              \"filename\" : \"$icon120\",
+                              \"scale\" : \"3x\"
+                            },
+                            {
+                              \"size\" : \"60x60\",
+                              \"idiom\" : \"iphone\",
+                              \"filename\" : \"$icon120\",
+                              \"scale\" : \"2x\"
+                            },
+                            {
+                              \"size\" : \"60x60\",
+                              \"idiom\" : \"iphone\",
+                              \"filename\" : \"$icon180\",
+                              \"scale\" : \"3x\"
+                            },
+                            {
+                              \"idiom\" : \"ipad\",
+                              \"size\" : \"29x29\",
+                              \"filename\" : \"$icon29\",
+                              \"scale\" : \"1x\"
+                            },
+                            {
+                              \"size\" : \"29x29\",
+                              \"idiom\" : \"ipad\",
+                              \"filename\" : \"$icon58\",
+                              \"scale\" : \"2x\"
+                            },
+                            {
+                              \"idiom\" : \"ipad\",
+                              \"size\" : \"40x40\",
+                              \"filename\" : \"$icon40\",
+                              \"scale\" : \"1x\"
+                            },
+                            {
+                              \"size\" : \"40x40\",
+                              \"idiom\" : \"ipad\",
+                              \"filename\" : \"$icon80\",
+                              \"scale\" : \"2x\"
+                            },
+                            {
+                              \"size\" : \"76x76\",
+                              \"idiom\" : \"ipad\",
+                              \"filename\" : \"$icon76\",
+                              \"scale\" : \"1x\"
+                            },
+                            {
+                              \"size\" : \"76x76\",
+                              \"idiom\" : \"ipad\",
+                              \"filename\" : \"$icon152\",
+                              \"scale\" : \"2x\"
+                            }
+                          ],
+                          \"info\" : {
+                            \"version\" : 1,
+                            \"author\" : \"xcode\"
+                          }
+                        }"
+            
+            echo $appIconJson > $xcassets
+            
+            echo "Finished generating app icons"
+            
+        else
+            echo "Can't find Assets.xcassets/AppIcon.appiconset/Contents.json to proceed"
+            echo "Please make sure that you are in your project folder"
+        fi
+        
+    else
+        echo "Please specify a valid app icon location"
+    fi
+    
+    
+}
+
+function createSplashImage(){
+    echo "Creating splash image"
+    $orinetation=$1
+    
+    echo "$1"
+    echo "$2"
+}
+
+function usage(){
+    echo "usage     ./ios_resizer [to2x | to3x | --help]"
+}
+
+function help(){
+    echo "This script depends on imagemagic program"
+    echo "To install imagemagic please run"
+    echo "brew install imagemagick"
+    echo "And make sure to put imagemagick is in your path"
+    echo ""
+    echo "iresize to2x                              - Convert all @x3 photos to @2x photos, and normal photo for non retina"
+    echo "iresize to1x                              - Convert all @x2 photos to normal photo for non retina"
+    echo "iresize [-ai] <file>                      - App-Icon - Create app icon from specified <file> image, note that you must be"
+    echo "                                            inside folder where your Assets.xcassets resides."
+    echo "                                            Make sure that icon is at least 180x180px and png format for best results."
+    echo "iresize [-li] <orientation> <file>        - Create launch image for specified <file> image "
+    echo "                                            <orientation> must be either portrait or landscape "
+    echo "                                            For portrait use "
+}
+
+#!/bin/bash
+
+CUR_DIR="$PWD"
+IFS=$'\n';
+
+
+function to2x(){
+    
+    for f in $( find $CUR_DIR -iname "*.png" -or -iname "*.jpg" ); do
+     
+        if [[ $f == *"@3x"* ]]
+        then
+            image_dir=$(dirname $f)
+            image_name=$(basename $f)
+            extension="${image_name##*.}"
+            filename="${image_name%.*}"
+            
+            newnamex2=${filename/@3x/@2x}
+            newnamex1=${filename/@3x/""}
+            newfilex2="$image_dir/$newnamex2.$extension"
+            newfilex1="$image_dir/$newnamex1.$extension"
+            
+            echo "Procesing: $f > $newfilex1 ";
+            $(convert $f -resize 66.6% $newfilex2)
+            $(convert $f -resize 33.3% $newfilex1)
+        fi
+    done
+}
+
+function to1x(){
+    
+    for f in $( find $CUR_DIR -iname "*.png" -or -iname "*.jpg" ); do
+     
+        if [[ $f == *"@2x"* ]]
+        then
+            image_dir=$(dirname $f)
+            image_name=$(basename $f)
+            extension="${image_name##*.}"
+            filename="${image_name%.*}"
+            
+            newnamex1=${filename/@2x/""}
+            newfilex1="$image_dir/$newnamex1.$extension"
+            
+            echo "Procesing: $f > $newfilex1 ";
+            $(convert $f -resize 50% $newfilex1)
+        fi
+    done
+}
+
+function createAppIcon(){
+    image=$1;
+    assetsFolder=$2
+
+
+    if [[ -z "$assetsFolder" ]]; then
+      echo "Error please sepcify Assets folder"
+      return
+    fi
+
+    xcassets="$CUR_DIR/$assetsFolder/AppIcon.appiconset/Contents.json"
+
+
+    if [ -f $image ]; then
+        echo "Resizing app icon"
+        
+        if [ -f $xcassets ]; then
+            echo "Found $assetsFolder/AppIcon.appiconset/Contents.json"
+            
+            icon29="icon-29.png"
+            icon58="icon-58.png"
+            icon80="icon-80.png"
+            icon120="icon-120.png"
+            icon180="icon-180.png"
+            icon40="icon-40.png"
+            icon80="icon-80.png"
+            icon76="icon-76.png"
+            icon152="icon-152.png"
+            icon87="icon-87.png"
+            
+            $(convert $image -resize 29x29 $assetsFolder/AppIcon.appiconset/$icon29)
+            $(convert $image -resize 58x58 $assetsFolder/AppIcon.appiconset/$icon58)
+            $(convert $image -resize 80x80 $assetsFolder/AppIcon.appiconset/$icon80)
+            $(convert $image -resize 40x40 $assetsFolder/AppIcon.appiconset/$icon40)
+            $(convert $image -resize 80x80 $assetsFolder/AppIcon.appiconset/$icon80)
+            $(convert $image -resize 76x76 $assetsFolder/AppIcon.appiconset/$icon76)
+            $(convert $image -resize 87x87 $assetsFolder/AppIcon.appiconset/$icon87)
+            $(convert $image -resize 152x152 $assetsFolder/AppIcon.appiconset/$icon152)
+            $(convert $image -resize 120x120 $assetsFolder/AppIcon.appiconset/$icon120)
+            $(convert $image -resize 180x180 $assetsFolder/AppIcon.appiconset/$icon180)
+            
+            appIconJson="{
+                          \"images\" : [
+                            {
+                              \"size\" : \"29x29\",
+                              \"idiom\" : \"iphone\",
+                              \"filename\" : \"$icon58\",
+                              \"scale\" : \"2x\"
+                            },
+                            {
+                              \"size\" : \"29x29\",
+                              \"idiom\" : \"iphone\",
+                              \"filename\" : \"$icon87\",
+                              \"scale\" : \"3x\"
+                            },
+                            {
+                              \"size\" : \"40x40\",
+                              \"idiom\" : \"iphone\",
+                              \"filename\" : \"$icon80\",
+                              \"scale\" : \"2x\"
+                            },
+                            {
+                              \"size\" : \"40x40\",
+                              \"idiom\" : \"iphone\",
+                              \"filename\" : \"$icon120\",
+                              \"scale\" : \"3x\"
+                            },
+                            {
+                              \"size\" : \"60x60\",
+                              \"idiom\" : \"iphone\",
+                              \"filename\" : \"$icon120\",
+                              \"scale\" : \"2x\"
+                            },
+                            {
+                              \"size\" : \"60x60\",
+                              \"idiom\" : \"iphone\",
+                              \"filename\" : \"$icon180\",
+                              \"scale\" : \"3x\"
+                            },
+                            {
+                              \"idiom\" : \"ipad\",
+                              \"size\" : \"29x29\",
+                              \"filename\" : \"$icon29\",
+                              \"scale\" : \"1x\"
+                            },
+                            {
+                              \"size\" : \"29x29\",
+                              \"idiom\" : \"ipad\",
+                              \"filename\" : \"$icon58\",
+                              \"scale\" : \"2x\"
+                            },
+                            {
+                              \"idiom\" : \"ipad\",
+                              \"size\" : \"40x40\",
+                              \"filename\" : \"$icon40\",
+                              \"scale\" : \"1x\"
+                            },
+                            {
+                              \"size\" : \"40x40\",
+                              \"idiom\" : \"ipad\",
+                              \"filename\" : \"$icon80\",
+                              \"scale\" : \"2x\"
+                            },
+                            {
+                              \"size\" : \"76x76\",
+                              \"idiom\" : \"ipad\",
+                              \"filename\" : \"$icon76\",
+                              \"scale\" : \"1x\"
+                            },
+                            {
+                              \"size\" : \"76x76\",
+                              \"idiom\" : \"ipad\",
+                              \"filename\" : \"$icon152\",
+                              \"scale\" : \"2x\"
+                            }
+                          ],
+                          \"info\" : {
+                            \"version\" : 1,
+                            \"author\" : \"xcode\"
+                          }
+                        }"
+            
+            echo $appIconJson > $xcassets
+            
+            echo "Finished generating app icons"
+            
+        else
+            echo "Can't find $assetsFolder/AppIcon.appiconset/Contents.json to proceed"
+            echo "Please make sure that you are in your project folder"
+        fi
+        
+    else
+        echo "Please specify a valid app icon location"
+    fi
+    
+    
+}
+
+function createSplashImage(){
+    echo "Creating splash image"
+    $orinetation=$1
+    
+    echo "$1"
+    echo "$2"
+}
+
+function usage(){
+    echo "usage     ./ios_resizer [to2x | to3x | --help]"
+}
+
+function help(){
+    echo "This script depends on imagemagic program"
+    echo "To install imagemagic please run"
+    echo "brew install imagemagick"
+    echo "And make sure to put imagemagick is in your path"
+    echo ""
+    echo "iresize to2x                              - Convert all @x3 photos to @2x photos, and normal photo for non retina"
+    echo "iresize to1x                              - Convert all @x2 photos to normal photo for non retina"
+    echo "iresize [-ai] <file> <assetsFolder>       - App-Icon - Create app icon from specified <file> image, note that you must be"
+    echo "                                            inside folder where your Assets folder resides. <assetsFolder> is absolute path to you assets folder"
+    echo "                                            Make sure that icon is at least 180x180px and png format for best results."
+}
+
+if [[ $1 == "to2x" ]]; then
+    to2x
+elif [[ $1 == "to1x" ]]; then
+    to1x
+elif [[ $1 == "--help" ]]; then
+    help
+elif [[ $1 == "-ai" ]]; then
+    createAppIcon $2 $3
+elif [[ $1 == "-li" ]]; then
+    createSplashImage $2 $3
+else
+    usage
+fi
+
