@@ -17,6 +17,7 @@ You can put this script in path also or you can copy the script and run it from 
 ```
 
 <h5>Bulk resize images</h5>
+This function will go from current folder to all subfolder, so make sure you are on a right path.
 ```
 ./ios_resize to2x
 ./ios_resize to1x
@@ -26,4 +27,4 @@ You can put this script in path also or you can copy the script and run it from 
 <br>
 <h5>Next steps</h5>
 Make support for launch images
-Catch imagemagic errors, and better error handling as well as returning signals from function
+Catch imagemagic errors, and better error handling as well as returning signals from functions
