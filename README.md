@@ -13,14 +13,14 @@ You can put this script in path also or you can copy the script and run it from 
 
 <h5>Create app icon</h5>
 ```
-./ios_resize -ai your_icon_.png xcassets_folder_name
+ios_resize -ai your_icon_.png xcassets_folder_name
 ```
 
 <h5>Bulk resize images</h5>
 This function will go from current folder to all subfolder, so make sure you are on a right path.
 ```
-./ios_resize to2x
-./ios_resize to1x
+ios_resize to2x
+ios_resize to1x
 ```
 
 <br>
