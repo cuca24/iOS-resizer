@@ -17,7 +17,7 @@ ios_resize -ai your_icon_.png xcassets_folder_name
 ```
 
 <h5>Bulk resize images</h5>
-This function will go from current folder to all subfolder, so make sure you are on a right path.
+This function will go from current folder to all subfolder, so make sure you are in a right folder.
 ```
 ios_resize to2x
 ios_resize to1x
