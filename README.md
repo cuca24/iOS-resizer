@@ -1,6 +1,6 @@
 # iOS resizer
 Resize application icon and set icon to Contents.json file using command line. 
-Bulk resize @3x to @2x and @2x to @1x images.
+Bulk resize @3x to @2x and @3x to @1x images.
 
 <h3>Getting started</h3>
 This script depends on imagemagic program
