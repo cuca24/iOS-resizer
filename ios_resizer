@@ -201,7 +201,7 @@ function help(){
     echo "This script depends on imagemagic program"
     echo "To install imagemagic please run"
     echo "brew install imagemagick"
-    echo "And make sure to put imagemagick is in your path"
+    echo "And make sure to put imagemagick in your path"
     echo ""
     echo "iresize to2x                              - Convert all @x3 photos to @2x photos, and normal photo for non retina"
     echo "iresize to1x                              - Convert all @x2 photos to normal photo for non retina"
