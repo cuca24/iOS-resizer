@@ -5,7 +5,7 @@ Bulk resize @3x to @2x and @3x to @1x images.
 <h3>Getting started</h3>
 This script depends on imagemagic program
 To install imagemagic please run ```brew install imagemagick ``` <br>
-Make sure to put imagemagick is in your path
+Make sure to put imagemagick in your path
 
 You can put this script in path also or you can copy the script and run it from there.
 
