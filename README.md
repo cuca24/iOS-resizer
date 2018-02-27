@@ -7,7 +7,7 @@ This script depends on imagemagic program
 To install imagemagic please run ```brew install imagemagick ``` <br>
 Make sure to put imagemagick in your path
 
-You can put this script in path also or you can copy the script and run it from there.
+You can put this script in path or you can copy the script and run it from there.
 
 <h3>Usage</h3>
 
